@@ -6,6 +6,7 @@ import {
   ScrollView,
   ActivityIndicator,
   Alert,
+  TouchableOpacity,
 } from 'react-native';
 import { useRoute } from '@react-navigation/native';
 
@@ -54,22 +55,24 @@ const SedesScreen = () => {
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      <Text style={styles.title}>Sedes en {ciudad.name}</Text>
+        <Text style={styles.title}>Sedes en {ciudad.name}</Text>
 
-      {loading ? (
-        <ActivityIndicator size="large" color="#000" />
-      ) : (
-        sedes.map((sede, index) => (
-          <View key={sede.id || index} style={styles.sedeCard}>
-            <Text style={styles.sedeName}>
-              {sede.name || 'Nombre no disponible'}
-            </Text>
-            {sede.description ? (
-              <Text style={styles.sedeDescription}>{sede.description}</Text>
-            ) : null}
-          </View>
-        ))
-      )}
+        {loading ? (
+          <ActivityIndicator size="large" color="#000" />
+        ) : (
+          sedes.map((sede, index) => (
+            <View key={sede.id || index} style={styles.sedeCard}>
+              <TouchableOpacity>
+                <Text style={styles.sedeName}>
+                {sede.nombre || 'Nombre no disponible'}
+              </Text>
+              {sede.description ? (
+                <Text style={styles.sedeDescription}>{sede.description}</Text>
+              ) : null}
+              </TouchableOpacity>
+            </View>
+          ))
+        )}
     </ScrollView>
   );
 };
@@ -80,6 +83,8 @@ const styles = StyleSheet.create({
   container: {
     padding: 20,
     backgroundColor: '#fff',
+    width: '100%',
+    height: '100%'
   },
   title: {
     fontSize: 22,
