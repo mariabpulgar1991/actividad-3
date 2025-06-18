@@ -6,16 +6,21 @@ import {
   ScrollView,
   ActivityIndicator,
   Alert,
+  Button,
   TouchableOpacity,
 } from 'react-native';
 import { useRoute } from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
+import * as Haptics from 'expo-haptics';
 
 const SedesScreen = () => {
   const route = useRoute();
+  const navigation = useNavigation();
   const { ciudad } = route.params;
 
   const [sedes, setSedes] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [selectedSede, setSelectedSede] = useState(null);
 
   // Mapeo de ciudades a IDs de sedes
   const sedesPorCiudad = {
@@ -23,6 +28,17 @@ const SedesScreen = () => {
     Cartagena: [7, 8, 9, 10, 11, 12],
     Montería: [13, 14, 15, 16, 17, 18],
     'Santa Marta': [19, 20, 21, 22, 23, 24],
+  };
+
+  const handleSelectedSede = (sede) => {
+      setSelectedSede(sede);
+      Haptics.selectionAsync();
+  };
+
+  const handleConfirm = () => {
+    if(selectedSede) {
+      navigation.navigate('SedeDetalle', {sede: selectedSede})
+    }
   };
 
   useEffect(() => {
@@ -39,6 +55,7 @@ const SedesScreen = () => {
     results.forEach((sede, index) => {
       console.log(`Sede ${index + 1}:`, sede);
     });
+
 
     setSedes(results);
   } catch (error) {
@@ -61,8 +78,15 @@ const SedesScreen = () => {
           <ActivityIndicator size="large" color="#000" />
         ) : (
           sedes.map((sede, index) => (
-            <View key={sede.id || index} style={styles.sedeCard}>
-              <TouchableOpacity>
+              <TouchableOpacity
+              key={sede.id || index} 
+              style={[
+                styles.sedeCard,
+                selectedSede?.id === sede.id &&
+                styles.sedeButtonSelected
+              ]}
+                onPress={() => handleSelectedSede(sede)}
+              >
                 <Text style={styles.sedeName}>
                 {sede.nombre || 'Nombre no disponible'}
               </Text>
@@ -70,9 +94,17 @@ const SedesScreen = () => {
                 <Text style={styles.sedeDescription}>{sede.descripcion}</Text>
               ) : null}
               </TouchableOpacity>
-            </View>
           ))
         )}
+
+        <View style={styles.confirmButton}>
+            <Button
+              title="Confirmar ciudad"
+              onPress={handleConfirm}
+              disabled={!selectedSede}
+              color="#007bff"
+            />
+        </View>
     </ScrollView>
   );
 };
@@ -106,5 +138,8 @@ const styles = StyleSheet.create({
     marginTop: 5,
     fontSize: 14,
     color: '#555',
+  },
+  sedeButtonSelected: {
+    backgroundColor: '#cce5ff',
   },
 });
