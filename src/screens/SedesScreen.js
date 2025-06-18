@@ -66,8 +66,8 @@ const SedesScreen = () => {
                 <Text style={styles.sedeName}>
                 {sede.nombre || 'Nombre no disponible'}
               </Text>
-              {sede.description ? (
-                <Text style={styles.sedeDescription}>{sede.description}</Text>
+              {sede.descripcion ? (
+                <Text style={styles.sedeDescription}>{sede.descripcion}</Text>
               ) : null}
               </TouchableOpacity>
             </View>
