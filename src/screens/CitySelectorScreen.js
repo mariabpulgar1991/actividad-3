@@ -57,7 +57,7 @@ const CitySelectorScreen = () => {
           style={styles.heroImage}
           resizeMode="cover"
         />
-        <Text style={styles.heroText}>Bienvenido a nuestro gimnasio</Text>
+        <Text style={styles.heroText}>¡Bienvenido a LevelUp!</Text>
       </View>
 
       {/* Selección de ciudad */}
@@ -112,13 +112,13 @@ const styles = StyleSheet.create({
   },
   heroText: {
     position: 'absolute',
-    bottom: 20,
-    left: 20,
-    fontSize: 24,
-    fontWeight: 'bold',
+    width: '100%',
+    textAlign: 'center',
+    bottom: 0,
+    fontSize: 28,
     color: '#fff',
-    backgroundColor: 'rgba(0,0,0,0.4)',
-    padding: 10,
+    backgroundColor: 'rgba(0,0,0,0.7)',
+    padding: 15,
     borderRadius: 5,
   },
   content: {
@@ -128,7 +128,8 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 20,
     fontWeight: 'bold',
-    marginBottom: 15,
+    padding: 15,
+    marginBottom: 20,
   },
   cityButton: {
     padding: 15,

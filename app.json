@@ -1,15 +1,15 @@
 {
   "expo": {
-    "name": "actividad-3",
-    "slug": "actividad-3",
+    "name": "LevelUp Gym",
+    "slug": "LevelUp Gym",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/icon.png",
+    "icon": "./assets/images/logo_LevelUp.jpg",
     "userInterfaceStyle": "light",
     "newArchEnabled": true,
     "splash": {
-      "image": "./assets/images/splash-icon.png",
-      "resizeMode": "contain",
+      "image": "./assets/images/logo_LevelUp.jpg",
+      "resizeMode": "cover",
       "backgroundColor": "#ffffff"
     },
     "ios": {
