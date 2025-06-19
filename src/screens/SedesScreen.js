@@ -142,4 +142,8 @@ const styles = StyleSheet.create({
   sedeButtonSelected: {
     backgroundColor: '#cce5ff',
   },
+  confirmButton: {
+    marginTop: 20,
+    width: '100%',
+  },
 });
