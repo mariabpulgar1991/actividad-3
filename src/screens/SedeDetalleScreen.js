@@ -7,7 +7,7 @@ import {
   ActivityIndicator,
   Pressable,
   TouchableOpacity,
-  Button
+  Button,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import * as Haptics from "expo-haptics";
@@ -44,16 +44,16 @@ const SedeDetalleScreen = () => {
       });
   }, []);
 
-  const renderItem = ({ item }) => (
-    <Pressable style={styles.planCard}>
-      <Text style={styles.planTitle}>{item.plan_nombre}</Text>
-      <Text style={styles.planDescripcion}>{item.plan_descripcion}</Text>
-      <Text style={styles.planTurnos}>
-        Turnos: {item.plan_turnos.join(", ")}
-      </Text>
-      <Text style={styles.planPrecio}>${item.plan_precio} / mes</Text>
-    </Pressable>
-  );
+  // const renderItem = ({ item }) => (
+  //   <Pressable style={styles.planCard}>
+  //     <Text style={styles.planTitle}>{item.plan_nombre}</Text>
+  //     <Text style={styles.planDescripcion}>{item.plan_descripcion}</Text>
+  //     <Text style={styles.planTurnos}>
+  //       Turnos: {item.plan_turnos.join(", ")}
+  //     </Text>
+  //     <Text style={styles.planPrecio}>${item.plan_precio} / mes</Text>
+  //   </Pressable>
+  // );
 
   return (
     <View style={styles.container}>
@@ -66,7 +66,8 @@ const SedeDetalleScreen = () => {
             key={plan.plan_id || index}
             style={[
               styles.planCard,
-              selectedPlan?.plan_id === plan.plan_id && styles.planButtonSelected,
+              selectedPlan?.plan_id === plan.plan_id &&
+                styles.planButtonSelected,
             ]}
             onPress={() => handleSelectedPlan(plan)}
           >
@@ -78,6 +79,10 @@ const SedeDetalleScreen = () => {
                 {plan.plan_descripcion}
               </Text>
             ) : null}
+            <Text style={styles.planTurnos}>
+              Turnos: {plan.plan_turnos.join(", ")}
+            </Text>
+            <Text style={styles.planPrecio}>${plan.plan_precio} / mes</Text>
           </TouchableOpacity>
         ))
         // <FlatList
@@ -104,19 +109,19 @@ export default SedeDetalleScreen;
 const styles = StyleSheet.create({
   container: {
     padding: 20,
-    backgroundColor: '#fff',
-    width: '100%',
-    height: '100%'
+    backgroundColor: "#fff",
+    width: "100%",
+    height: "100%",
   },
   planCard: {
     padding: 15,
     borderRadius: 8,
-    backgroundColor: '#f0f0f0',
+    backgroundColor: "#f0f0f0",
     marginBottom: 10,
   },
   planTitle: {
     fontSize: 18,
-    fontWeight: '600',
+    fontWeight: "600",
   },
   planPrecio: {
     fontSize: 16,
@@ -126,19 +131,19 @@ const styles = StyleSheet.create({
   planDescripcion: {
     marginTop: 5,
     fontSize: 14,
-    color: '#555',
+    color: "#555",
   },
   titleText: {
     fontSize: 22,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     marginBottom: 15,
-    textAlign: 'center',
+    textAlign: "center",
   },
   planButtonSelected: {
     backgroundColor: "#cce5ff",
   },
   confirmButton: {
     marginTop: 20,
-    width: '100%',
+    width: "100%",
   },
 });
