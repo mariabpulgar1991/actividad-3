@@ -2,18 +2,18 @@ import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
-  StyleSheet,
-  FlatList,
   ActivityIndicator,
-  Pressable,
   TouchableOpacity,
   Button,
 } from "react-native";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useRoute } from "@react-navigation/native";
 import * as Haptics from "expo-haptics";
 
 const SedeDetalleScreen = () => {
   const navigation = useNavigation();
+  const route = useRoute();
+  const { sede } = route.params; // 👈 recibe la sede seleccionada
+
   const [planes, setPlanes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedPlan, setSelectedPlan] = useState(null);
@@ -21,7 +21,10 @@ const SedeDetalleScreen = () => {
   const handleSelectedPlan = (plan) => {
     setSelectedPlan(plan);
     Haptics.selectionAsync();
-  };
+};
+
+console.log('🚨 SedeDetalleScreen montado desde:\n', new Error().stack);
+
 
   const handleConfirm = () => {
     if (selectedPlan) {
@@ -30,69 +33,55 @@ const SedeDetalleScreen = () => {
   };
 
   useEffect(() => {
-    fetch(
-      "https://mock.apidog.com/m1/963136-947726-default/branches/{id}/planes"
-    )
-      .then((res) => res.json())
-      .then((data) => {
+    const fetchPlanes = async () => {
+      try {
+        const response = await fetch(
+          `https://mock.apidog.com/m1/963136-947726-default/branches/${sede.id}/planes`
+        );
+        const data = await response.json();
         setPlanes(data);
+      } catch (error) {
+        console.error("Error al cargar los planes:", error);
+      } finally {
         setLoading(false);
-      })
-      .catch((err) => {
-        console.error("Error al cargar los planes:", err);
-        setLoading(false);
-      });
-  }, []);
+      }
+    };
 
-  // const renderItem = ({ item }) => (
-  //   <Pressable style={styles.planCard}>
-  //     <Text style={styles.planTitle}>{item.plan_nombre}</Text>
-  //     <Text style={styles.planDescripcion}>{item.plan_descripcion}</Text>
-  //     <Text style={styles.planTurnos}>
-  //       Turnos: {item.plan_turnos.join(", ")}
-  //     </Text>
-  //     <Text style={styles.planPrecio}>${item.plan_precio} / mes</Text>
-  //   </Pressable>
-  // );
+    fetchPlanes();
+  }, [sede.id]);
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.titleText}>Planes disponibles</Text>
+    <View className="p-5 bg-white w-full h-full">
+      <Text className="text-2xl font-bold mb-4 text-center">Planes disponibles</Text>
       {loading ? (
         <ActivityIndicator size="large" color="#007bff" />
       ) : (
         planes.map((plan, index) => (
           <TouchableOpacity
             key={plan.plan_id || index}
-            style={[
-              styles.planCard,
-              selectedPlan?.plan_id === plan.plan_id &&
-                styles.planButtonSelected,
-            ]}
+            className={`p-4 rounded mb-3 border ${
+              selectedPlan?.plan_id === plan.plan_id
+                ? "bg-blue-100 border-blue-500 shadow-md"
+                : "bg-gray-100 border-gray-300"
+            }`}
             onPress={() => handleSelectedPlan(plan)}
           >
-            <Text style={styles.planTitle}>
+            <Text className="text-lg font-semibold">
               {plan.plan_nombre || "Nombre no disponible"}
             </Text>
             {plan.plan_descripcion ? (
-              <Text style={styles.planDescripcion}>
-                {plan.plan_descripcion}
-              </Text>
+              <Text className="text-sm text-gray-600 mt-1">{plan.plan_descripcion}</Text>
             ) : null}
-            <Text style={styles.planTurnos}>
+            <Text className="text-sm mt-1">
               Turnos: {plan.plan_turnos.join(", ")}
             </Text>
-            <Text style={styles.planPrecio}>${plan.plan_precio} / mes</Text>
+            <Text className="text-base text-blue-600 mt-1 font-medium">
+              ${plan.plan_precio} / mes
+            </Text>
           </TouchableOpacity>
         ))
-        // <FlatList
-        //   data={planes}
-        //   keyExtractor={(item) => item.plan_id.toString()}
-        //   renderItem={renderItem}
-        //   contentContainerStyle={{ padding: 20 }}
-        // />
       )}
-      <View style={styles.confirmButton}>
+      <View className="mt-6 w-full">
         <Button
           title="Confirmar ciudad"
           onPress={handleConfirm}
@@ -105,45 +94,3 @@ const SedeDetalleScreen = () => {
 };
 
 export default SedeDetalleScreen;
-
-const styles = StyleSheet.create({
-  container: {
-    padding: 20,
-    backgroundColor: "#fff",
-    width: "100%",
-    height: "100%",
-  },
-  planCard: {
-    padding: 15,
-    borderRadius: 8,
-    backgroundColor: "#f0f0f0",
-    marginBottom: 10,
-  },
-  planTitle: {
-    fontSize: 18,
-    fontWeight: "600",
-  },
-  planPrecio: {
-    fontSize: 16,
-    color: "#007bff",
-    marginVertical: 4,
-  },
-  planDescripcion: {
-    marginTop: 5,
-    fontSize: 14,
-    color: "#555",
-  },
-  titleText: {
-    fontSize: 22,
-    fontWeight: "bold",
-    marginBottom: 15,
-    textAlign: "center",
-  },
-  planButtonSelected: {
-    backgroundColor: "#cce5ff",
-  },
-  confirmButton: {
-    marginTop: 20,
-    width: "100%",
-  },
-});

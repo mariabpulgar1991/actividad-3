@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import {
   View,
   Text,
-  StyleSheet,
   Image,
   ScrollView,
   TouchableOpacity,
@@ -39,7 +38,7 @@ const CitySelectorScreen = () => {
 
   const handleSelectCity = (city) => {
     setSelectedCity(city);
-    Haptics.selectionAsync(); // ✅ Retroalimentación háptica
+    Haptics.selectionAsync();
   };
 
   const handleConfirm = () => {
@@ -49,20 +48,22 @@ const CitySelectorScreen = () => {
   };
 
   return (
-    <ScrollView contentContainerStyle={styles.container}>
+    <ScrollView contentContainerStyle={{ flexGrow: 1 }} className="bg-white">
       {/* Hero Section */}
-      <View style={styles.hero}>
+      <View className="relative w-full h-[250px]">
         <Image
           source={require('../../src/assets/gym-hero-1.jpg')}
-          style={styles.heroImage}
+          className="w-full h-full"
           resizeMode="cover"
         />
-        <Text style={styles.heroText}>¡Bienvenido a LevelUp!</Text>
+        <Text className="absolute bottom-0 w-full text-center text-2xl text-white bg-black/70 p-4 rounded">
+          ¡Bienvenido a LevelUp!
+        </Text>
       </View>
 
       {/* Selección de ciudad */}
-      <View style={styles.content}>
-        <Text style={styles.title}>Selecciona tu ciudad</Text>
+      <View className="p-5 items-center">
+        <Text className="text-xl font-bold mb-5">Selecciona tu ciudad</Text>
 
         {loading ? (
           <ActivityIndicator size="large" color="#000" />
@@ -70,18 +71,17 @@ const CitySelectorScreen = () => {
           cities.map((city) => (
             <TouchableOpacity
               key={city.id}
-              style={[
-                styles.cityButton,
-                selectedCity?.id === city.id && styles.cityButtonSelected,
-              ]}
+              className={`p-4 rounded mb-2 w-full items-center ${
+                selectedCity?.id === city.id ? 'bg-blue-100' : 'bg-gray-200'
+              }`}
               onPress={() => handleSelectCity(city)}
             >
-              <Text style={styles.cityButtonText}>{city.name}</Text>
+              <Text className="text-base">{city.name}</Text>
             </TouchableOpacity>
           ))
         )}
 
-        <View style={styles.confirmButton}>
+        <View className="mt-5 w-full">
           <Button
             title="Confirmar ciudad"
             onPress={handleConfirm}
@@ -95,58 +95,3 @@ const CitySelectorScreen = () => {
 };
 
 export default CitySelectorScreen;
-
-const styles = StyleSheet.create({
-  container: {
-    flexGrow: 1,
-    backgroundColor: '#fff',
-  },
-  hero: {
-    height: 250,
-    width: '100%',
-    position: 'relative',
-  },
-  heroImage: {
-    width: '100%',
-    height: '100%',
-  },
-  heroText: {
-    position: 'absolute',
-    width: '100%',
-    textAlign: 'center',
-    bottom: 0,
-    fontSize: 28,
-    color: '#fff',
-    backgroundColor: 'rgba(0,0,0,0.7)',
-    padding: 15,
-    borderRadius: 5,
-  },
-  content: {
-    padding: 20,
-    alignItems: 'center',
-  },
-  title: {
-    fontSize: 22,
-    fontWeight: 'bold',
-    padding: 15,
-    marginBottom: 20,
-  },
-  cityButton: {
-    padding: 15,
-    backgroundColor: '#f0f0f0',
-    borderRadius: 8,
-    marginBottom: 10,
-    width: '100%',
-    alignItems: 'center',
-  },
-  cityButtonSelected: {
-    backgroundColor: '#cce5ff',
-  },
-  cityButtonText: {
-    fontSize: 16,
-  },
-  confirmButton: {
-    marginTop: 20,
-    width: '100%',
-  },
-});

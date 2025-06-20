@@ -2,18 +2,18 @@ import React, { useEffect, useState } from 'react';
 import {
   View,
   Text,
-  StyleSheet,
   ScrollView,
   ActivityIndicator,
   Alert,
   Button,
   TouchableOpacity,
 } from 'react-native';
-import { useRoute } from '@react-navigation/native';
-import { useNavigation } from '@react-navigation/native';
+import { useRoute, useNavigation } from '@react-navigation/native';
 import * as Haptics from 'expo-haptics';
 
 const SedesScreen = () => {
+    console.log('🚀 SedesScreen montado correctamente');
+
   const route = useRoute();
   const navigation = useNavigation();
   const { ciudad } = route.params;
@@ -22,7 +22,6 @@ const SedesScreen = () => {
   const [loading, setLoading] = useState(true);
   const [selectedSede, setSelectedSede] = useState(null);
 
-  // Mapeo de ciudades a IDs de sedes
   const sedesPorCiudad = {
     Barranquilla: [1, 2, 3, 4, 5, 6],
     Cartagena: [7, 8, 9, 10, 11, 12],
@@ -31,119 +30,86 @@ const SedesScreen = () => {
   };
 
   const handleSelectedSede = (sede) => {
-      setSelectedSede(sede);
-      Haptics.selectionAsync();
+    setSelectedSede(sede);
+    Haptics.selectionAsync();
   };
 
-  const handleConfirm = () => {
-    if(selectedSede) {
-      navigation.navigate('SedeDetalle', {sede: selectedSede})
-    }
-  };
-
-  useEffect(() => {
-   const fetchSedes = async () => {
-  try {
-    const ids = sedesPorCiudad[ciudad.name];
-    const requests = ids.map((id) =>
-      fetch(`https://mock.apidog.com/m1/922983-905608-default/sedes/${id}`)
-        .then((res) => res.json())
-    );
-    const results = await Promise.all(requests);
-
-    console.log("👉 Resultado individual de sedes:");
-    results.forEach((sede, index) => {
-      console.log(`Sede ${index + 1}:`, sede);
-    });
-
-
-    setSedes(results);
-  } catch (error) {
-    Alert.alert('Error', 'No se pudieron cargar las sedes');
-  } finally {
-    setLoading(false);
+ const handleConfirm = () => {
+  if (selectedSede) {
+    navigation.navigate('SedeDetalle', { sede: selectedSede });
   }
 };
 
-  
+
+  useEffect(() => {
+    const fetchSedes = async () => {
+      try {
+        const ids = sedesPorCiudad[ciudad.name];
+
+        const requests = ids.map((id) =>
+          fetch(`https://mock.apidog.com/m1/922983-905608-default/sedes/${id}`)
+            .then((res) => {
+              if (!res.ok) throw new Error(`Error en la sede ${id}`);
+              return res.json();
+            })
+        );
+
+        const results = await Promise.allSettled(requests);
+        const sedesExitosas = results
+          .filter((r) => r.status === 'fulfilled')
+          .map((r) => r.value);
+
+        if (sedesExitosas.length === 0) throw new Error('Todas las sedes fallaron');
+
+        setSedes(sedesExitosas);
+      } catch (error) {
+        console.error('🔴 Error al cargar las sedes:', error.message);
+        Alert.alert('Error', 'No se pudieron cargar las sedes');
+      } finally {
+        setLoading(false);
+      }
+    };
 
     fetchSedes();
   }, [ciudad.name]);
 
   return (
-    <ScrollView contentContainerStyle={styles.container}>
-        <Text style={styles.title}>Sedes en {ciudad.name}</Text>
+    <ScrollView contentContainerStyle={{ flexGrow: 1 }} className="bg-white px-5 py-6 w-full h-full">
+      <Text className="text-2xl font-bold mb-4 text-center">Sedes en {ciudad.name}</Text>
 
-        {loading ? (
-          <ActivityIndicator size="large" color="#000" />
-        ) : (
-          sedes.map((sede, index) => (
-              <TouchableOpacity
-              key={sede.id || index} 
-              style={[
-                styles.sedeCard,
-                selectedSede?.id === sede.id &&
-                styles.sedeButtonSelected
-              ]}
-                onPress={() => handleSelectedSede(sede)}
-              >
-                <Text style={styles.sedeName}>
-                {sede.nombre || 'Nombre no disponible'}
-              </Text>
-              {sede.descripcion ? (
-                <Text style={styles.sedeDescription}>{sede.descripcion}</Text>
-              ) : null}
-              </TouchableOpacity>
-          ))
-        )}
+      {loading ? (
+        <ActivityIndicator size="large" color="#000" />
+      ) : (
+        sedes.map((sede, index) => (
+          <TouchableOpacity
+            key={sede.id || index}
+            className={`p-4 rounded mb-3 border ${
+              selectedSede?.id === sede.id
+                ? 'bg-blue-100 border-blue-500 shadow-md'
+                : 'bg-gray-100 border-gray-300'
+            }`}
+            onPress={() => handleSelectedSede(sede)}
+          >
+            <Text className="text-lg font-semibold">
+              {sede.nombre || 'Nombre no disponible'}
+            </Text>
+            {sede.descripcion ? (
+              <Text className="text-sm text-gray-600 mt-1">{sede.descripcion}</Text>
+            ) : null}
+          </TouchableOpacity>
+        ))
+      )}
 
-        <View style={styles.confirmButton}>
-            <Button
-              title="Confirmar ciudad"
-              onPress={handleConfirm}
-              disabled={!selectedSede}
-              color="#007bff"
-            />
-        </View>
+      <View className="mt-6 w-full">
+        <Button
+          title="Confirmar ciudad"
+          onPress={handleConfirm}
+          disabled={!selectedSede}
+          color="#007bff"
+        />
+      </View>
     </ScrollView>
   );
 };
 
 export default SedesScreen;
-
-const styles = StyleSheet.create({
-  container: {
-    padding: 20,
-    backgroundColor: '#fff',
-    width: '100%',
-    height: '100%'
-  },
-  title: {
-    fontSize: 22,
-    fontWeight: 'bold',
-    marginBottom: 15,
-    textAlign: 'center',
-  },
-  sedeCard: {
-    padding: 15,
-    borderRadius: 8,
-    backgroundColor: '#f0f0f0',
-    marginBottom: 10,
-  },
-  sedeName: {
-    fontSize: 18,
-    fontWeight: '600',
-  },
-  sedeDescription: {
-    marginTop: 5,
-    fontSize: 14,
-    color: '#555',
-  },
-  sedeButtonSelected: {
-    backgroundColor: '#cce5ff',
-  },
-  confirmButton: {
-    marginTop: 20,
-    width: '100%',
-  },
-});

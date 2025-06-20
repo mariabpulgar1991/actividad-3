@@ -3,6 +3,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import AppNavigator from './src/navigation/AppNavigator';
 import { StyleSheet } from 'react-native';
 import { UserDataInfoProvider } from './src/context/UserDataInfo';
+import "./global.css"
 
 
 export default function App() {
