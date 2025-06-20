@@ -25,7 +25,7 @@ const SedeDetalleScreen = () => {
 
   const handleConfirm = () => {
     if (selectedPlan) {
-      navigation.navigate("Login", { plan: selectedPlan });
+      navigation.navigate("Access", { plan: selectedPlan });
     }
   };
 

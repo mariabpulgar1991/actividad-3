@@ -9,6 +9,7 @@ import SignUpScreen from '../screens/SignUpScreen';
 import LoginScreen from '../screens/LoginScreen';
 import PerfilScreen from '../screens/PerfilScreen';
 import TodasLasSedesScreen from '../screens/TodasLasSedesScreen';
+import AccessScreen from '../screens/AccessScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -18,6 +19,7 @@ const AppNavigator = () => {
       <Stack.Screen name="CitySelector" component={CitySelectorScreen} />
       <Stack.Screen name="Sedes" component={SedesScreen} />
       <Stack.Screen name="SedeDetalle" component={SedeDetalleScreen} />
+      <Stack.Screen name="Access" component={AccessScreen}/>
       <Stack.Screen name="SignUp" component={SignUpScreen} />
       <Stack.Screen name="Login" component={LoginScreen} />
       <Stack.Screen name="Perfil" component={PerfilScreen} />

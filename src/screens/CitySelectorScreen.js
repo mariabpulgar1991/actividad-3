@@ -126,14 +126,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   title: {
-    fontSize: 20,
+    fontSize: 22,
     fontWeight: 'bold',
     padding: 15,
     marginBottom: 20,
   },
   cityButton: {
     padding: 15,
-    backgroundColor: '#eee',
+    backgroundColor: '#f0f0f0',
     borderRadius: 8,
     marginBottom: 10,
     width: '100%',

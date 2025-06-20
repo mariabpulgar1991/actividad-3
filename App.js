@@ -2,13 +2,17 @@ import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import AppNavigator from './src/navigation/AppNavigator';
 import { StyleSheet } from 'react-native';
+import { UserDataInfoProvider } from './src/context/UserDataInfo';
 
 
 export default function App() {
   return (
-    <NavigationContainer>
+    <UserDataInfoProvider>
+      <NavigationContainer>
       <AppNavigator />
-    </NavigationContainer>
+      </NavigationContainer>
+    </UserDataInfoProvider>
+    
   );
 }
 
