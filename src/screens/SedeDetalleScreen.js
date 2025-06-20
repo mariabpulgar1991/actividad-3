@@ -85,16 +85,10 @@ const SedeDetalleScreen = () => {
             <Text style={styles.planPrecio}>${plan.plan_precio} / mes</Text>
           </TouchableOpacity>
         ))
-        // <FlatList
-        //   data={planes}
-        //   keyExtractor={(item) => item.plan_id.toString()}
-        //   renderItem={renderItem}
-        //   contentContainerStyle={{ padding: 20 }}
-        // />
       )}
       <View style={styles.confirmButton}>
         <Button
-          title="Confirmar ciudad"
+          title="Confirmar Plan"
           onPress={handleConfirm}
           disabled={!selectedPlan}
           color="#007bff"

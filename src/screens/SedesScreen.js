@@ -99,7 +99,7 @@ const SedesScreen = () => {
 
         <View style={styles.confirmButton}>
             <Button
-              title="Confirmar ciudad"
+              title="Confirmar Sede"
               onPress={handleConfirm}
               disabled={!selectedSede}
               color="#007bff"
